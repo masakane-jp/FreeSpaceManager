@@ -1,0 +1,92 @@
+.filters {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.search {
+  flex: 1;
+  max-width: 320px;
+  height: 38px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--color-surface);
+}
+
+.select {
+  height: 38px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--color-surface);
+}
+
+.search:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.nameCell {
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.input {
+  height: 38px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--color-surface);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.importSummary {
+  display: flex;
+  gap: var(--space-4);
+  font-size: 13px;
+}
+
+.importErrorList {
+  margin: var(--space-3) 0 0;
+  padding-left: var(--space-5);
+  font-size: 12px;
+  color: var(--color-danger);
+  max-height: 200px;
+  overflow-y: auto;
+}
+

@@ -1,0 +1,13 @@
+.error {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.message {
+  font-size: 13px;
+  color: var(--color-danger);
+}

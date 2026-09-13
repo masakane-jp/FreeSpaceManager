@@ -1,0 +1,48 @@
+.areaSection {
+  margin-bottom: var(--space-7);
+}
+
+.areaSection:last-child {
+  margin-bottom: 0;
+}
+
+.areaHeading {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.areaName {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.areaMeta {
+  font-size: 12px;
+  color: var(--color-text-faint);
+}
+
+.areaDescription {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.grid {
+  margin-top: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,112 @@
+.backLink {
+  display: inline-block;
+  margin-bottom: var(--space-3);
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.infoCard {
+  padding: var(--space-5);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin: 0;
+}
+
+.infoGrid dt {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.infoGrid dd {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.confirmText {
+  font-size: 13px;
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
+}
+
+.dialogGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-5);
+}
+
+.dialogGrid dt {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.dialogGrid dd {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.historyCard {
+  margin-top: var(--space-5);
+  padding: var(--space-5);
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+.historyEmpty {
+  font-size: 13px;
+  color: var(--color-text-faint);
+}
+
+.historyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.historyItem:last-child {
+  border-bottom: none;
+}
+
+.historyUser {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.historyDate {
+  font-size: 12px;
+  color: var(--color-text-faint);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}
