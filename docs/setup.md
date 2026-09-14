@@ -46,7 +46,19 @@ npm run dev
 
 `http://localhost:5174/` で起動します。APIの向き先は `frontend/.env` の `VITE_API_BASE_URL`（デフォルト `http://localhost:8000/api`）。
 
-ビルド確認は `npm run build`（`tsc -b && vite build`）。
+### 本番ビルド（IISでbackendと同一オリジン配信する構成）
+
+会社のIIS環境ではDjango(backend)がフロントエンドの静的ファイルも配信する構成のため、`npm run build`（`tsc -b && vite build && node scripts/copy-to-backend.mjs`）を実行すると、ビルド出力が自動で以下に配置されます。
+
+- `backend/templates/index.html`
+- `backend/static/react/assets/js/`・`backend/static/react/assets/css/`（JSとCSSを分けて配置）
+- `backend/static/react/`直下（`favicon.svg`など`public/`由来のファイル）
+
+いずれも`.gitignore`済みの生成物です。Django側は`config/urls.py`の末尾に`api/`・`admin/`・`static/`・`media/`以外の全パスを`index.html`にフォールバックさせるcatch-allルートを用意しており、これによりReact Router（`BrowserRouter`）のURLをリロードしても404にならず正しく動作します。
+
+**注意**: IISのweb.config側の実際の静的配信パス規則がまだ確定していないため、`vite.config.ts`の`base: '/static/react/'`と本番用の`frontend/.env.production`の`VITE_API_BASE_URL=/api`は仮の値です。実際のパス構成が決まったら合わせて調整してください。
+
+ビルド確認のみしたい場合は `npm run build` を実行するだけでOKです（`tsc -b && vite build`のみ実行したい場合はコマンドを個別に叩いてください）。
 
 ## ログインアカウント
 

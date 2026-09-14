@@ -4,3 +4,8 @@ __pycache__/
 db.sqlite3
 .env
 media/
+staticfiles/
+
+# frontendのビルド出力（npm run build で自動生成される）
+templates/index.html
+static/react/

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Pencil } from 'lucide-react';
+import { KeyRound, Pencil } from 'lucide-react';
 import { PageHeader } from '../../../components/PageHeader/PageHeader';
 import { Card } from '../../../components/Card/Card';
 import { Badge } from '../../../components/Badge/Badge';
@@ -13,7 +13,14 @@ import { Skeleton } from '../../../components/Skeleton/Skeleton';
 import { Pagination } from '../../../components/Pagination/Pagination';
 import { useAsync } from '../../../lib/useAsync';
 import { ApiError } from '../../../lib/api/client';
-import { getUser, listAreas, listReservations, listSpaces, updateUser } from '../../../lib/api/resources';
+import {
+  getUser,
+  listAreas,
+  listReservations,
+  listSpaces,
+  setUserPassword,
+  updateUser,
+} from '../../../lib/api/resources';
 import { reservationStatusLabel, reservationStatusTone } from '../../../lib/status';
 import { formatDateRange } from '../../../lib/date';
 import type { UserRole, UserStatus } from '../../../types';
@@ -54,6 +61,10 @@ export function UserDetail() {
     status: 'active' as UserStatus,
   });
   const [formError, setFormError] = useState<string | null>(null);
+
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ password: '', confirm: '' });
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -113,6 +124,26 @@ export function UserDetail() {
     }
   }
 
+  function openPasswordChange() {
+    setPasswordForm({ password: '', confirm: '' });
+    setPasswordError(null);
+    setIsChangingPassword(true);
+  }
+
+  async function handlePasswordSave(event: React.FormEvent) {
+    event.preventDefault();
+    if (passwordForm.password !== passwordForm.confirm) {
+      setPasswordError('確認用パスワードが一致しません。');
+      return;
+    }
+    try {
+      await setUserPassword(user.id, passwordForm.password);
+      setIsChangingPassword(false);
+    } catch (err) {
+      setPasswordError(err instanceof ApiError ? err.message : 'パスワードの変更に失敗しました。');
+    }
+  }
+
   return (
     <div>
       <Link to="/admin/users" className={styles.backLink}>
@@ -122,9 +153,16 @@ export function UserDetail() {
         title={user.name}
         description={`社員番号: ${user.employeeNumber}`}
         actions={
-          <Button variant="secondary" onClick={openEdit}>
-            <Pencil size={14} /> 編集
-          </Button>
+          <>
+            {user.role === 'admin' && (
+              <Button variant="secondary" onClick={openPasswordChange}>
+                <KeyRound size={14} /> パスワード変更
+              </Button>
+            )}
+            <Button variant="secondary" onClick={openEdit}>
+              <Pencil size={14} /> 編集
+            </Button>
+          </>
         }
       />
 
@@ -258,6 +296,44 @@ export function UserDetail() {
                 閉じる
               </Button>
               <Button type="submit">保存する</Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {isChangingPassword && (
+        <Modal title="パスワードを変更" onClose={() => setIsChangingPassword(false)}>
+          <form className={styles.form} onSubmit={handlePasswordSave}>
+            {passwordError && <FormError message={passwordError} />}
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>新しいパスワード</span>
+              <input
+                type="password"
+                className={styles.input}
+                value={passwordForm.password}
+                onChange={(event) =>
+                  setPasswordForm((prev) => ({ ...prev, password: event.target.value }))
+                }
+                required
+              />
+            </label>
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>新しいパスワード（確認用）</span>
+              <input
+                type="password"
+                className={styles.input}
+                value={passwordForm.confirm}
+                onChange={(event) =>
+                  setPasswordForm((prev) => ({ ...prev, confirm: event.target.value }))
+                }
+                required
+              />
+            </label>
+            <div className={styles.dialogActions}>
+              <Button type="button" variant="ghost" onClick={() => setIsChangingPassword(false)}>
+                閉じる
+              </Button>
+              <Button type="submit">変更する</Button>
             </div>
           </form>
         </Modal>

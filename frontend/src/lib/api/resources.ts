@@ -88,6 +88,10 @@ export async function updateUser(
   return toAppUser(raw);
 }
 
+export async function setUserPassword(id: string, password: string): Promise<void> {
+  await api.post(`/users/${id}/set_password/`, { password });
+}
+
 export async function exportUsersCsv(): Promise<Blob> {
   return api.getBlob('/users/export_csv/');
 }

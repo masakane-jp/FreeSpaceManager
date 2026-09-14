@@ -38,6 +38,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'employee_number'
     REQUIRED_FIELDS = ['name']
 
+    @property
+    def is_active(self):
+        # AbstractBaseUserは`is_active = True`という素の属性しか持たないため、
+        # Django管理サイトやDRFのTokenAuthenticationが参照する`is_active`を
+        # 業務上の在籍状態（status）と同じ意味にするためプロパティで上書きしている。
+        # 実DBカラムを別に持たせると status と食い違う状態が発生しうるため、
+        # 真実の源は常に status 一本にする。
+        return self.status == self.Status.ACTIVE
+
     class Meta:
         verbose_name = 'ユーザー'
         verbose_name_plural = 'ユーザー'

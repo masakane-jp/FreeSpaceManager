@@ -1,6 +1,8 @@
 import csv
 import io
 
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import HttpResponse
 from rest_framework import status, viewsets
 from rest_framework.authtoken.models import Token
@@ -98,6 +100,22 @@ class UserViewSet(viewsets.ModelViewSet):
                 updated += 1
 
         return Response({'created': created, 'updated': updated, 'errors': errors})
+
+    @action(detail=True, methods=['post'], url_path='set_password')
+    def set_password(self, request, pk=None):
+        if request.user.role != User.Role.ADMIN:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        target = self.get_object()
+        password = request.data.get('password') or ''
+        try:
+            validate_password(password, user=target)
+        except DjangoValidationError as e:
+            return Response({'password': e.messages}, status=status.HTTP_400_BAD_REQUEST)
+
+        target.set_password(password)
+        target.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class AreaViewSet(viewsets.ModelViewSet):

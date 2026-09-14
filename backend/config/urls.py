@@ -17,7 +17,8 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,3 +27,10 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# backend(Django)がフロントエンドのビルド出力も配信する構成（IIS想定）のため、
+# api/admin/static/media以外の全パスはReact Router側に処理を委ねる。
+# frontend側で npm run build を実行し backend/templates/index.html が生成されるまではエラーになる。
+urlpatterns += [
+    re_path(r'^(?!api/|admin/|static/|media/).*$', TemplateView.as_view(template_name='index.html')),
+]

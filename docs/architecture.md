@@ -30,7 +30,7 @@ frontend/src/
 
 | モデル | 主なフィールド | 備考 |
 |---|---|---|
-| `User` | `employee_number`（ログインID・一意）, `name`, `role`（member/admin）, `status`（active/inactive）, `is_staff`（Django管理サイト用） | カスタムユーザーモデル。`id`と`employee_number`は別物（社員番号は変更・再入社を考慮して分離） |
+| `User` | `employee_number`（ログインID・一意）, `name`, `role`（member/admin）, `status`（active/inactive）, `is_staff`（Django管理サイト用） | カスタムユーザーモデル。`id`と`employee_number`は別物（社員番号は変更・再入社を考慮して分離）。`is_active`はDBカラムではなく`status == active`を返すプロパティ（Django管理サイト・DRFのTokenAuthenticationが参照するため用意。真実の源は常に`status`一つ） |
 | `Area` | `name`, `floor`, `description` | |
 | `Space` | `area`（FK）, `name`, `capacity`, `tags`（JSON配列）, `description`, `status`（available/in_use/reserved/closed） | |
 | `Reservation` | `space`（FK）, `user`（FK・予約者）, `purpose`, `start_date`, `end_date`, `status`（upcoming/active/ended/cancelled）, `created_at` | 同一スペース内で日付が重複する予約は作成・更新時にエラー（`cancelled`は対象外） |
@@ -47,6 +47,8 @@ frontend/src/
   - `IsAdminRoleOrReadOnly`: 閲覧はログイン済みなら誰でも可、作成・編集・削除は`role='admin'`のみ。Area/Space/User/Announcement/CalendarNoteに適用。
   - `IsOwnerOrAdmin`: 閲覧はログイン済みなら誰でも可、編集・削除は本人（`user`フィールドが一致）または管理者のみ。Reservationに適用。予約作成時、一般メンバーは`user`フィールドを自分以外に指定しても強制的に本人にされる（なりすまし防止）。
 - **業務上の管理者ロールとDjangoスーパーユーザーは別概念**。詳細は `setup.md` を参照。`UserViewSet`のqueryset はスーパーユーザーを常に除外している。
+- **パスワード変更**: `POST /api/users/<id>/set_password/`（管理者限定）で他ユーザーのパスワードを再設定できる。管理画面の`UserDetail`（対象が`role=admin`の場合のみ）から利用可能。Djangoの`validate_password`でバリデーションする。
+- **Django管理サイト**: `core/admin.py`で`django.contrib.auth.admin.UserAdmin`をカスタムユーザーモデル向けに継承（`fieldsets`に`is_active`は含めない。上記プロパティのため実フィールドではなく、`ModelForm`が認識できないためエラーになる）。検索（社員番号/氏名）・絞り込み（role/status/is_staff/is_superuser）・安全なパスワード変更（生のハッシュを直接編集させない）に対応。
 
 ## フロントエンドのデータ取得
 
