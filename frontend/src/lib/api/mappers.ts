@@ -45,6 +45,7 @@ export function toSpace(raw: ApiSpace): Space {
     tags: raw.tags,
     description: raw.description,
     status: raw.status,
+    isClosed: raw.is_closed,
   };
 }
 

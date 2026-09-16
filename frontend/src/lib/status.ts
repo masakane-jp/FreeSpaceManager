@@ -2,14 +2,12 @@ import type { ReservationStatus, SpaceStatus } from '../types';
 
 export const spaceStatusLabel: Record<SpaceStatus, string> = {
   available: '空き',
-  in_use: '使用中',
   reserved: '予約済み',
   closed: '停止中',
 };
 
 export const spaceStatusTone: Record<SpaceStatus, 'success' | 'warning' | 'info' | 'neutral'> = {
   available: 'success',
-  in_use: 'warning',
   reserved: 'info',
   closed: 'neutral',
 };

@@ -48,7 +48,7 @@ export function SpaceDetail() {
     return { space, area, reservations, users };
   }, [spaceId]);
 
-  const [startDate, setStartDate] = useState('');
+  const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState('');
   const [purpose, setPurpose] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -132,7 +132,7 @@ export function SpaceDetail() {
         startDate,
         endDate,
       });
-      setStartDate('');
+      setStartDate(today);
       setEndDate('');
       setPurpose('');
       setSubmitted(true);
@@ -262,6 +262,7 @@ export function SpaceDetail() {
                 className={styles.input}
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
+                min={today}
                 required
               />
             </label>
@@ -368,6 +369,7 @@ export function SpaceDetail() {
                   className={styles.input}
                   value={editStartDate}
                   onChange={(event) => setEditStartDate(event.target.value)}
+                  min={today}
                   required
                 />
               </label>

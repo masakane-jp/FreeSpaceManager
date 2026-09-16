@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -71,7 +72,6 @@ class Area(models.Model):
 class Space(models.Model):
     class Status(models.TextChoices):
         AVAILABLE = 'available', '空き'
-        IN_USE = 'in_use', '使用中'
         RESERVED = 'reserved', '予約済み'
         CLOSED = 'closed', '停止中'
 
@@ -80,11 +80,24 @@ class Space(models.Model):
     capacity = models.PositiveIntegerField('定員', default=0)
     tags = models.JSONField('タグ', default=list, blank=True)
     description = models.TextField('説明', blank=True)
-    status = models.CharField('状態', max_length=10, choices=Status.choices, default=Status.AVAILABLE)
+    is_closed = models.BooleanField('利用停止中', default=False)
 
     class Meta:
         verbose_name = 'スペース'
         verbose_name_plural = 'スペース'
+
+    @property
+    def status(self):
+        # 「空き/予約済み」は当日の予約有無から自動計算する（手動管理はis_closedのみ）。
+        # Reservationは日単位までしか予約時間を持たないため、当日は時間帯を問わず
+        # 一律「予約済み」として扱う（「使用中」との区別はしない）。
+        if self.is_closed:
+            return self.Status.CLOSED
+        today = timezone.localdate()
+        has_reservation_today = self.reservations.filter(
+            start_date__lte=today, end_date__gte=today, is_cancelled=False,
+        ).exists()
+        return self.Status.RESERVED if has_reservation_today else self.Status.AVAILABLE
 
     def __str__(self):
         return self.name
@@ -102,12 +115,25 @@ class Reservation(models.Model):
     purpose = models.CharField('利用目的', max_length=200)
     start_date = models.DateField('開始日')
     end_date = models.DateField('終了日')
-    status = models.CharField('状態', max_length=10, choices=Status.choices, default=Status.UPCOMING)
+    is_cancelled = models.BooleanField('キャンセル済み', default=False)
     created_at = models.DateTimeField('登録日時', auto_now_add=True)
 
     class Meta:
         verbose_name = '予約'
         verbose_name_plural = '予約'
+
+    @property
+    def status(self):
+        # upcoming/active/endedは開始日・終了日と本日の関係から自動計算する。
+        # キャンセルだけは日付から導出できない手動の終端状態なのでis_cancelledで管理する。
+        if self.is_cancelled:
+            return self.Status.CANCELLED
+        today = timezone.localdate()
+        if self.end_date < today:
+            return self.Status.ENDED
+        if self.start_date > today:
+            return self.Status.UPCOMING
+        return self.Status.ACTIVE
 
     def __str__(self):
         return f'{self.purpose} ({self.space})'
@@ -131,7 +157,9 @@ class ReservationHistory(models.Model):
     class Meta:
         verbose_name = '予約変更履歴'
         verbose_name_plural = '予約変更履歴'
-        ordering = ['-created_at']
+        # created_atだけだと、短時間に連続登録された履歴の順序が同一タイムスタンプで
+        # 不定になることがあるため、idを第2キーにして常に新しい順を保証する。
+        ordering = ['-created_at', '-id']
 
     def __str__(self):
         return f'{self.reservation} - {self.action} by {self.user}'

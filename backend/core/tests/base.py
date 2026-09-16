@@ -26,8 +26,8 @@ class BaseAPITestCase(APITestCase):
         self.other_member = self.create_user('90003', '一般次郎')
         self.area = Area.objects.create(name='テストエリア', floor='1F', description='')
         self.space = Space.objects.create(
-            area=self.area, name='テストスペース', capacity=4, tags=[], description='', status='available',
+            area=self.area, name='テストスペース', capacity=4, tags=[], description='',
         )
         self.other_space = Space.objects.create(
-            area=self.area, name='テストスペース2', capacity=4, tags=[], description='', status='available',
+            area=self.area, name='テストスペース2', capacity=4, tags=[], description='',
         )

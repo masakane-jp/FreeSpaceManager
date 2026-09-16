@@ -16,7 +16,7 @@ import { useAsync } from '../../../lib/useAsync';
 import { ApiError } from '../../../lib/api/client';
 import { cancelReservation, listAreas, listReservations, listSpaces, updateReservation } from '../../../lib/api/resources';
 import { reservationStatusLabel, reservationStatusTone } from '../../../lib/status';
-import { formatDateRange } from '../../../lib/date';
+import { formatDateRange, toISODate } from '../../../lib/date';
 import type { Reservation, ReservationStatus } from '../../../types';
 import tableStyles from '../../../components/Table/Table.module.css';
 import styles from './Reservations.module.css';
@@ -33,6 +33,7 @@ const tabs: Array<{ value: ReservationStatus | 'all'; label: string }> = [
 
 export function Reservations() {
   const { user } = useAuth();
+  const today = toISODate(new Date());
   const { data, isLoading, error, reload } = useAsync(
     () => Promise.all([listReservations(), listSpaces(), listAreas()]),
     [],
@@ -202,6 +203,7 @@ export function Reservations() {
                 className={styles.input}
                 value={editStartDate}
                 onChange={(event) => setEditStartDate(event.target.value)}
+                min={today}
                 required
               />
             </label>

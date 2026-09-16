@@ -13,12 +13,12 @@ class IsAdminRoleOrReadOnly(BasePermission):
 
 
 class IsOwnerOrAdmin(BasePermission):
-    """Any authenticated user can read/create; only the reservation's own user or an admin can modify it."""
+    """Any authenticated user can list/create (space occupancy display needs to show
+    other users' reservations); viewing, editing or cancelling a specific reservation
+    (including its history) requires being its own user or an admin."""
 
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated)
 
     def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS:
-            return True
         return obj.user_id == request.user.id or request.user.role == 'admin'

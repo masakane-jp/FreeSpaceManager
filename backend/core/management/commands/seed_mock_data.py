@@ -24,38 +24,38 @@ AREAS = [
 ]
 
 SPACES = [
-    {'id': 's-001', 'area_id': 'a-01', 'name': 'オープンデスクA', 'capacity': 6, 'tags': ['集中', 'コンセントあり'], 'description': '窓際の6人用オープンデスク。Wi-Fi・電源完備。', 'status': 'available'},
-    {'id': 's-002', 'area_id': 'a-01', 'name': 'オープンデスクB', 'capacity': 4, 'tags': ['集中'], 'description': '4人用のコンパクトなデスクスペース。', 'status': 'in_use'},
-    {'id': 's-003', 'area_id': 'a-01', 'name': 'ラウンジソファ席', 'capacity': 3, 'tags': ['リラックス', '雑談'], 'description': 'ソファ席の軽いミーティングスペース。', 'status': 'available'},
-    {'id': 's-004', 'area_id': 'a-02', 'name': '会議室501', 'capacity': 8, 'tags': ['プロジェクター', 'ホワイトボード'], 'description': '8名収容の中会議室。プロジェクター常設。', 'status': 'reserved'},
-    {'id': 's-005', 'area_id': 'a-02', 'name': '会議室502', 'capacity': 4, 'tags': ['ホワイトボード'], 'description': '4名収容の小会議室。', 'status': 'available'},
-    {'id': 's-006', 'area_id': 'a-02', 'name': '個室ブース503', 'capacity': 1, 'tags': ['Web会議向け', '個室'], 'description': 'Web会議専用の1人用個室ブース。', 'status': 'in_use'},
-    {'id': 's-007', 'area_id': 'a-02', 'name': '個室ブース504', 'capacity': 1, 'tags': ['Web会議向け', '個室'], 'description': 'Web会議専用の1人用個室ブース。', 'status': 'available'},
-    {'id': 's-008', 'area_id': 'a-03', 'name': '多目的ホールA', 'capacity': 30, 'tags': ['研修', 'イベント'], 'description': '30名規模の研修・イベント対応ホール。', 'status': 'available'},
-    {'id': 's-009', 'area_id': 'a-03', 'name': '多目的ホールB', 'capacity': 15, 'tags': ['研修'], 'description': '15名規模の研修スペース。可動式パーティション。', 'status': 'closed'},
-    {'id': 's-010', 'area_id': 'a-04', 'name': '応接コーナー1', 'capacity': 4, 'tags': ['来客対応'], 'description': '来客向けの軽い打ち合わせコーナー。', 'status': 'available'},
+    {'id': 's-001', 'area_id': 'a-01', 'name': 'オープンデスクA', 'capacity': 6, 'tags': ['集中', 'コンセントあり'], 'description': '窓際の6人用オープンデスク。Wi-Fi・電源完備。', 'is_closed': False},
+    {'id': 's-002', 'area_id': 'a-01', 'name': 'オープンデスクB', 'capacity': 4, 'tags': ['集中'], 'description': '4人用のコンパクトなデスクスペース。', 'is_closed': False},
+    {'id': 's-003', 'area_id': 'a-01', 'name': 'ラウンジソファ席', 'capacity': 3, 'tags': ['リラックス', '雑談'], 'description': 'ソファ席の軽いミーティングスペース。', 'is_closed': False},
+    {'id': 's-004', 'area_id': 'a-02', 'name': '会議室501', 'capacity': 8, 'tags': ['プロジェクター', 'ホワイトボード'], 'description': '8名収容の中会議室。プロジェクター常設。', 'is_closed': False},
+    {'id': 's-005', 'area_id': 'a-02', 'name': '会議室502', 'capacity': 4, 'tags': ['ホワイトボード'], 'description': '4名収容の小会議室。', 'is_closed': False},
+    {'id': 's-006', 'area_id': 'a-02', 'name': '個室ブース503', 'capacity': 1, 'tags': ['Web会議向け', '個室'], 'description': 'Web会議専用の1人用個室ブース。', 'is_closed': False},
+    {'id': 's-007', 'area_id': 'a-02', 'name': '個室ブース504', 'capacity': 1, 'tags': ['Web会議向け', '個室'], 'description': 'Web会議専用の1人用個室ブース。', 'is_closed': False},
+    {'id': 's-008', 'area_id': 'a-03', 'name': '多目的ホールA', 'capacity': 30, 'tags': ['研修', 'イベント'], 'description': '30名規模の研修・イベント対応ホール。', 'is_closed': False},
+    {'id': 's-009', 'area_id': 'a-03', 'name': '多目的ホールB', 'capacity': 15, 'tags': ['研修'], 'description': '15名規模の研修スペース。可動式パーティション。', 'is_closed': True},
+    {'id': 's-010', 'area_id': 'a-04', 'name': '応接コーナー1', 'capacity': 4, 'tags': ['来客対応'], 'description': '来客向けの軽い打ち合わせコーナー。', 'is_closed': False},
 ]
 
 RESERVATIONS = [
-    {'id': 'r-001', 'space_id': 's-004', 'user_id': 'u-001', 'purpose': '新機能キックオフMTG', 'start_date': '2026-09-14', 'end_date': '2026-09-14', 'status': 'upcoming', 'created_at': '2026-09-10'},
-    {'id': 'r-002', 'space_id': 's-002', 'user_id': 'u-001', 'purpose': '集中作業（開発タスク）', 'start_date': '2026-09-11', 'end_date': '2026-09-13', 'status': 'active', 'created_at': '2026-09-09'},
-    {'id': 'r-003', 'space_id': 's-006', 'user_id': 'u-002', 'purpose': '取引先とのWeb会議', 'start_date': '2026-09-12', 'end_date': '2026-09-12', 'status': 'active', 'created_at': '2026-09-08'},
-    {'id': 'r-004', 'space_id': 's-004', 'user_id': 'u-005', 'purpose': '週次進捗会議', 'start_date': '2026-09-08', 'end_date': '2026-09-08', 'status': 'ended', 'created_at': '2026-09-01'},
-    {'id': 'r-005', 'space_id': 's-008', 'user_id': 'u-003', 'purpose': '新入社員研修', 'start_date': '2026-09-20', 'end_date': '2026-09-22', 'status': 'upcoming', 'created_at': '2026-09-05'},
-    {'id': 'r-006', 'space_id': 's-001', 'user_id': 'u-004', 'purpose': '資料作成', 'start_date': '2026-09-05', 'end_date': '2026-09-06', 'status': 'ended', 'created_at': '2026-09-01'},
-    {'id': 'r-007', 'space_id': 's-005', 'user_id': 'u-001', 'purpose': '1on1', 'start_date': '2026-09-16', 'end_date': '2026-09-16', 'status': 'upcoming', 'created_at': '2026-09-11'},
-    {'id': 'r-008', 'space_id': 's-010', 'user_id': 'u-002', 'purpose': '来客対応（A社様）', 'start_date': '2026-09-13', 'end_date': '2026-09-13', 'status': 'cancelled', 'created_at': '2026-09-07'},
-    {'id': 'r-009', 'space_id': 's-003', 'user_id': 'u-001', 'purpose': 'チームランチ後の雑談MTG', 'start_date': '2026-09-18', 'end_date': '2026-09-18', 'status': 'upcoming', 'created_at': '2026-09-11'},
-    {'id': 'r-010', 'space_id': 's-007', 'user_id': 'u-001', 'purpose': '採用面接（Web）', 'start_date': '2026-09-19', 'end_date': '2026-09-19', 'status': 'upcoming', 'created_at': '2026-09-10'},
-    {'id': 'r-011', 'space_id': 's-004', 'user_id': 'u-001', 'purpose': '月次レビュー会議', 'start_date': '2026-08-31', 'end_date': '2026-08-31', 'status': 'ended', 'created_at': '2026-08-25'},
-    {'id': 'r-012', 'space_id': 's-001', 'user_id': 'u-001', 'purpose': '資料作成（集中タイム）', 'start_date': '2026-08-27', 'end_date': '2026-08-28', 'status': 'ended', 'created_at': '2026-08-20'},
-    {'id': 'r-013', 'space_id': 's-005', 'user_id': 'u-001', 'purpose': 'チーム定例会議', 'start_date': '2026-08-24', 'end_date': '2026-08-24', 'status': 'ended', 'created_at': '2026-08-18'},
-    {'id': 'r-014', 'space_id': 's-002', 'user_id': 'u-001', 'purpose': '仕様検討ミーティング', 'start_date': '2026-08-20', 'end_date': '2026-08-21', 'status': 'ended', 'created_at': '2026-08-15'},
-    {'id': 'r-015', 'space_id': 's-006', 'user_id': 'u-001', 'purpose': '海外拠点とのWeb会議', 'start_date': '2026-08-17', 'end_date': '2026-08-17', 'status': 'ended', 'created_at': '2026-08-10'},
-    {'id': 'r-016', 'space_id': 's-010', 'user_id': 'u-001', 'purpose': '来客対応（協力会社）', 'start_date': '2026-08-13', 'end_date': '2026-08-13', 'status': 'cancelled', 'created_at': '2026-08-05'},
-    {'id': 'r-017', 'space_id': 's-003', 'user_id': 'u-001', 'purpose': '振り返りミーティング', 'start_date': '2026-08-07', 'end_date': '2026-08-07', 'status': 'ended', 'created_at': '2026-08-01'},
-    {'id': 'r-018', 'space_id': 's-007', 'user_id': 'u-001', 'purpose': '1on1（月次）', 'start_date': '2026-08-03', 'end_date': '2026-08-03', 'status': 'ended', 'created_at': '2026-07-28'},
-    {'id': 'r-019', 'space_id': 's-004', 'user_id': 'u-001', 'purpose': '四半期キックオフMTG', 'start_date': '2026-07-29', 'end_date': '2026-07-29', 'status': 'ended', 'created_at': '2026-07-20'},
+    {'id': 'r-001', 'space_id': 's-004', 'user_id': 'u-001', 'purpose': '新機能キックオフMTG', 'start_date': '2026-09-14', 'end_date': '2026-09-14', 'is_cancelled': False, 'created_at': '2026-09-10'},
+    {'id': 'r-002', 'space_id': 's-002', 'user_id': 'u-001', 'purpose': '集中作業（開発タスク）', 'start_date': '2026-09-11', 'end_date': '2026-09-13', 'is_cancelled': False, 'created_at': '2026-09-09'},
+    {'id': 'r-003', 'space_id': 's-006', 'user_id': 'u-002', 'purpose': '取引先とのWeb会議', 'start_date': '2026-09-12', 'end_date': '2026-09-12', 'is_cancelled': False, 'created_at': '2026-09-08'},
+    {'id': 'r-004', 'space_id': 's-004', 'user_id': 'u-005', 'purpose': '週次進捗会議', 'start_date': '2026-09-08', 'end_date': '2026-09-08', 'is_cancelled': False, 'created_at': '2026-09-01'},
+    {'id': 'r-005', 'space_id': 's-008', 'user_id': 'u-003', 'purpose': '新入社員研修', 'start_date': '2026-09-20', 'end_date': '2026-09-22', 'is_cancelled': False, 'created_at': '2026-09-05'},
+    {'id': 'r-006', 'space_id': 's-001', 'user_id': 'u-004', 'purpose': '資料作成', 'start_date': '2026-09-05', 'end_date': '2026-09-06', 'is_cancelled': False, 'created_at': '2026-09-01'},
+    {'id': 'r-007', 'space_id': 's-005', 'user_id': 'u-001', 'purpose': '1on1', 'start_date': '2026-09-16', 'end_date': '2026-09-16', 'is_cancelled': False, 'created_at': '2026-09-11'},
+    {'id': 'r-008', 'space_id': 's-010', 'user_id': 'u-002', 'purpose': '来客対応（A社様）', 'start_date': '2026-09-13', 'end_date': '2026-09-13', 'is_cancelled': True, 'created_at': '2026-09-07'},
+    {'id': 'r-009', 'space_id': 's-003', 'user_id': 'u-001', 'purpose': 'チームランチ後の雑談MTG', 'start_date': '2026-09-18', 'end_date': '2026-09-18', 'is_cancelled': False, 'created_at': '2026-09-11'},
+    {'id': 'r-010', 'space_id': 's-007', 'user_id': 'u-001', 'purpose': '採用面接（Web）', 'start_date': '2026-09-19', 'end_date': '2026-09-19', 'is_cancelled': False, 'created_at': '2026-09-10'},
+    {'id': 'r-011', 'space_id': 's-004', 'user_id': 'u-001', 'purpose': '月次レビュー会議', 'start_date': '2026-08-31', 'end_date': '2026-08-31', 'is_cancelled': False, 'created_at': '2026-08-25'},
+    {'id': 'r-012', 'space_id': 's-001', 'user_id': 'u-001', 'purpose': '資料作成（集中タイム）', 'start_date': '2026-08-27', 'end_date': '2026-08-28', 'is_cancelled': False, 'created_at': '2026-08-20'},
+    {'id': 'r-013', 'space_id': 's-005', 'user_id': 'u-001', 'purpose': 'チーム定例会議', 'start_date': '2026-08-24', 'end_date': '2026-08-24', 'is_cancelled': False, 'created_at': '2026-08-18'},
+    {'id': 'r-014', 'space_id': 's-002', 'user_id': 'u-001', 'purpose': '仕様検討ミーティング', 'start_date': '2026-08-20', 'end_date': '2026-08-21', 'is_cancelled': False, 'created_at': '2026-08-15'},
+    {'id': 'r-015', 'space_id': 's-006', 'user_id': 'u-001', 'purpose': '海外拠点とのWeb会議', 'start_date': '2026-08-17', 'end_date': '2026-08-17', 'is_cancelled': False, 'created_at': '2026-08-10'},
+    {'id': 'r-016', 'space_id': 's-010', 'user_id': 'u-001', 'purpose': '来客対応（協力会社）', 'start_date': '2026-08-13', 'end_date': '2026-08-13', 'is_cancelled': True, 'created_at': '2026-08-05'},
+    {'id': 'r-017', 'space_id': 's-003', 'user_id': 'u-001', 'purpose': '振り返りミーティング', 'start_date': '2026-08-07', 'end_date': '2026-08-07', 'is_cancelled': False, 'created_at': '2026-08-01'},
+    {'id': 'r-018', 'space_id': 's-007', 'user_id': 'u-001', 'purpose': '1on1（月次）', 'start_date': '2026-08-03', 'end_date': '2026-08-03', 'is_cancelled': False, 'created_at': '2026-07-28'},
+    {'id': 'r-019', 'space_id': 's-004', 'user_id': 'u-001', 'purpose': '四半期キックオフMTG', 'start_date': '2026-07-29', 'end_date': '2026-07-29', 'is_cancelled': False, 'created_at': '2026-07-20'},
 ]
 
 ANNOUNCEMENTS = [
@@ -126,7 +126,7 @@ class Command(BaseCommand):
                     'capacity': row['capacity'],
                     'tags': row['tags'],
                     'description': row['description'],
-                    'status': row['status'],
+                    'is_closed': row['is_closed'],
                 },
             )
             space_map[row['id']] = space
@@ -139,7 +139,7 @@ class Command(BaseCommand):
                 user=user_map[row['user_id']],
                 purpose=row['purpose'],
                 start_date=row['start_date'],
-                defaults={'end_date': row['end_date'], 'status': row['status']},
+                defaults={'end_date': row['end_date'], 'is_cancelled': row['is_cancelled']},
             )
             reservation_count += 1
         self.stdout.write(f'Reservations: {reservation_count}')

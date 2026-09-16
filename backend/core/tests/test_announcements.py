@@ -34,6 +34,13 @@ class AnnouncementBannerOverlapTests(BaseAPITestCase):
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_banner_end_date_before_start_date_is_rejected(self):
+        response = self.client.post('/api/announcements/', {
+            'title': '逆転告知', 'body': '本文', 'category': 'お知らせ', 'published_at': '2030-01-01',
+            'banner_enabled': True, 'banner_start_date': '2030-08-10', 'banner_end_date': '2030-08-01',
+        })
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_indefinite_banner_blocks_all_future_dates(self):
         Announcement.objects.filter(title='既存告知').update(banner_end_date=None)
         response = self.client.post('/api/announcements/', {

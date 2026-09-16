@@ -16,7 +16,7 @@ export interface Area {
   description: string;
 }
 
-export type SpaceStatus = 'available' | 'in_use' | 'reserved' | 'closed';
+export type SpaceStatus = 'available' | 'reserved' | 'closed';
 
 export interface Space {
   id: string;
@@ -26,6 +26,7 @@ export interface Space {
   tags: string[];
   description: string;
   status: SpaceStatus;
+  isClosed: boolean;
 }
 
 export type ReservationStatus = 'upcoming' | 'active' | 'ended' | 'cancelled';

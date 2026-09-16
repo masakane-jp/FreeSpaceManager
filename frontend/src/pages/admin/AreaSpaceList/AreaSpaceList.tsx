@@ -24,13 +24,10 @@ import {
 } from '../../../lib/api/resources';
 import { spaceStatusLabel, spaceStatusTone } from '../../../lib/status';
 import defaultFloorMapImage from '../../../assets/floor-map.svg';
-import type { SpaceStatus } from '../../../types';
 import tableStyles from '../../../components/Table/Table.module.css';
 import styles from './AreaSpaceList.module.css';
 
 const PAGE_SIZE = 10;
-
-const statusOptions: SpaceStatus[] = ['available', 'in_use', 'reserved', 'closed'];
 
 type Dialog = { type: 'create-area' } | { type: 'create-space' } | null;
 
@@ -57,7 +54,7 @@ export function AreaSpaceList() {
     name: '',
     areaId: '',
     description: '',
-    status: 'available' as SpaceStatus,
+    isClosed: false,
   });
 
   const [areasState, spacesState] = data ?? [[], []];
@@ -96,7 +93,7 @@ export function AreaSpaceList() {
   }
 
   function openCreateSpace() {
-    setSpaceForm({ name: '', areaId: areasState[0]?.id ?? '', description: '', status: 'available' });
+    setSpaceForm({ name: '', areaId: areasState[0]?.id ?? '', description: '', isClosed: false });
     setDialogError(null);
     setDialog({ type: 'create-space' });
   }
@@ -337,21 +334,15 @@ export function AreaSpaceList() {
                 ))}
               </select>
             </label>
-            <label className={styles.field}>
-              <span className={styles.fieldLabel}>状態</span>
-              <select
-                className={styles.input}
-                value={spaceForm.status}
+            <label className={styles.checkboxField}>
+              <input
+                type="checkbox"
+                checked={spaceForm.isClosed}
                 onChange={(event) =>
-                  setSpaceForm((prev) => ({ ...prev, status: event.target.value as SpaceStatus }))
+                  setSpaceForm((prev) => ({ ...prev, isClosed: event.target.checked }))
                 }
-              >
-                {statusOptions.map((status) => (
-                  <option key={status} value={status}>
-                    {spaceStatusLabel[status]}
-                  </option>
-                ))}
-              </select>
+              />
+              利用を停止する
             </label>
             <label className={styles.field}>
               <span className={styles.fieldLabel}>説明</span>

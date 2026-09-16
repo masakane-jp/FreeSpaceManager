@@ -145,7 +145,7 @@ class ReservationViewSet(viewsets.ModelViewSet):
         )
 
     def perform_update(self, serializer):
-        is_cancel = serializer.validated_data.get('status') == Reservation.Status.CANCELLED
+        is_cancel = serializer.validated_data.get('is_cancelled') is True
         instance = serializer.save()
         ReservationHistory.objects.create(
             reservation=instance,

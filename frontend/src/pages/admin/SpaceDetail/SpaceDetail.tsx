@@ -29,12 +29,10 @@ import {
   reservationStatusTone,
 } from '../../../lib/status';
 import { formatDateRange } from '../../../lib/date';
-import type { SpaceStatus } from '../../../types';
 import tableStyles from '../../../components/Table/Table.module.css';
 import styles from './SpaceDetail.module.css';
 
 const PAGE_SIZE = 10;
-const statusOptions: SpaceStatus[] = ['available', 'in_use', 'reserved', 'closed'];
 
 export function SpaceDetail() {
   const { spaceId } = useParams<{ spaceId: string }>();
@@ -61,7 +59,7 @@ export function SpaceDetail() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [dialogMode, setDialogMode] = useState<'edit' | 'delete' | null>(null);
-  const [form, setForm] = useState({ name: '', areaId: '', description: '', status: 'available' as SpaceStatus });
+  const [form, setForm] = useState({ name: '', areaId: '', description: '', isClosed: false });
   const [dialogError, setDialogError] = useState<string | null>(null);
 
   if (isLoading) {
@@ -99,7 +97,7 @@ export function SpaceDetail() {
   const pageItems = spaceReservations.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   function openEdit() {
-    setForm({ name: space.name, areaId: space.areaId, description: space.description, status: space.status });
+    setForm({ name: space.name, areaId: space.areaId, description: space.description, isClosed: space.isClosed });
     setDialogError(null);
     setDialogMode('edit');
   }
@@ -236,19 +234,13 @@ export function SpaceDetail() {
                 ))}
               </select>
             </label>
-            <label className={styles.field}>
-              <span className={styles.fieldLabel}>状態</span>
-              <select
-                className={styles.input}
-                value={form.status}
-                onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value as SpaceStatus }))}
-              >
-                {statusOptions.map((status) => (
-                  <option key={status} value={status}>
-                    {spaceStatusLabel[status]}
-                  </option>
-                ))}
-              </select>
+            <label className={styles.checkboxField}>
+              <input
+                type="checkbox"
+                checked={form.isClosed}
+                onChange={(event) => setForm((prev) => ({ ...prev, isClosed: event.target.checked }))}
+              />
+              利用を停止する
             </label>
             <label className={styles.field}>
               <span className={styles.fieldLabel}>説明</span>

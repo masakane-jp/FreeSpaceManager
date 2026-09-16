@@ -38,9 +38,24 @@ describe('toSpace', () => {
       tags: ['プロジェクター'],
       description: '',
       status: 'available',
+      is_closed: false,
     });
     expect(result.id).toBe('5');
     expect(result.areaId).toBe('2');
+  });
+
+  it('maps is_closed to isClosed', () => {
+    const result = toSpace({
+      id: 5,
+      area: 2,
+      name: '会議室501',
+      capacity: 8,
+      tags: [],
+      description: '',
+      status: 'closed',
+      is_closed: true,
+    });
+    expect(result.isClosed).toBe(true);
   });
 });
 

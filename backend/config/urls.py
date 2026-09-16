@@ -21,7 +21,9 @@ from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Reactアプリ側も業務上の管理画面を `/admin/*` で持っているため、
+    # Django標準の管理サイトとパスが衝突しないよう別プレフィックスに置く。
+    path('django-admin/', admin.site.urls),
     path('api/', include('core.urls')),
 ]
 
@@ -29,8 +31,8 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # backend(Django)がフロントエンドのビルド出力も配信する構成（IIS想定）のため、
-# api/admin/static/media以外の全パスはReact Router側に処理を委ねる。
+# api/django-admin/static/media以外の全パスはReact Router側に処理を委ねる。
 # frontend側で npm run build を実行し backend/templates/index.html が生成されるまではエラーになる。
 urlpatterns += [
-    re_path(r'^(?!api/|admin/|static/|media/).*$', TemplateView.as_view(template_name='index.html')),
+    re_path(r'^(?!api/|django-admin/|static/|media/).*$', TemplateView.as_view(template_name='index.html')),
 ]

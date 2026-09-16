@@ -22,7 +22,7 @@ venv\Scripts\python.exe manage.py seed_mock_data   # モックデータ投入（
 venv\Scripts\python.exe manage.py runserver 8000
 ```
 
-`http://localhost:8000/api/` にAPIが立ち上がります。`http://localhost:8000/admin/` はDjango標準の管理サイトです（後述の「2種類の管理者」を参照）。
+`http://localhost:8000/api/` にAPIが立ち上がります。`http://localhost:8000/django-admin/` はDjango標準の管理サイトです（Reactアプリ側の管理画面`/admin/*`とパスが衝突しないよう分けています。後述の「2種類の管理者」を参照）。
 
 アップロード画像（フロアマップ）は `backend/media/` に保存されます（gitignore対象）。
 
@@ -124,7 +124,7 @@ npm run test
 このアプリには性質の異なる2種類の管理者が存在します。混同しないよう注意してください。
 
 1. **業務上の管理者ロール**（`User.role == 'admin'`）：Reactアプリの管理画面（`/admin/*`）にログインできる、業務上の権限。社員番号＋パスワードでアプリの`/login`からログインします。
-2. **Djangoスーパーユーザー**（`is_superuser=True`）：Django標準の管理サイト（`/admin/`、Reactアプリとは別物）にログインするための、開発・保守用アカウント。アプリの`/login`からは（パスワードが合っていても）ログインできず、`/admin/login/`専用です。逆に業務上の管理者ロールのユーザーは`is_staff=False`なのでDjango管理サイトには入れません。またAPI (`/api/users/`) からもこのアカウントは常に除外されます。
+2. **Djangoスーパーユーザー**（`is_superuser=True`）：Django標準の管理サイト（`/django-admin/`、Reactアプリとは別物。Reactアプリ側も`/admin/*`を使っているためパスをずらしてある）にログインするための、開発・保守用アカウント。アプリの`/login`からは（パスワードが合っていても）ログインできず、`/django-admin/login/`専用です。逆に業務上の管理者ロールのユーザーは`is_staff=False`なのでDjango管理サイトには入れません。またAPI (`/api/users/`) からもこのアカウントは常に除外されます。
 
 開発用のDjangoスーパーユーザーを作る場合：
 

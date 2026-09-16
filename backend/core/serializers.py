@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.utils import timezone
 from rest_framework import serializers
 
 from .models import Announcement, Area, CalendarNote, Reservation, ReservationHistory, Space, User
@@ -25,16 +26,17 @@ class AreaSerializer(serializers.ModelSerializer):
 class SpaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Space
-        fields = ['id', 'area', 'name', 'capacity', 'tags', 'description', 'status']
+        fields = ['id', 'area', 'name', 'capacity', 'tags', 'description', 'status', 'is_closed']
+        read_only_fields = ['status']
 
 
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = [
-            'id', 'space', 'user', 'purpose', 'start_date', 'end_date', 'status', 'created_at',
+            'id', 'space', 'user', 'purpose', 'start_date', 'end_date', 'status', 'is_cancelled', 'created_at',
         ]
-        read_only_fields = ['created_at']
+        read_only_fields = ['status', 'created_at']
 
     def validate(self, attrs):
         def field(name):
@@ -42,14 +44,20 @@ class ReservationSerializer(serializers.ModelSerializer):
                 return attrs[name]
             return getattr(self.instance, name, None)
 
-        if field('status') == Reservation.Status.CANCELLED:
+        if 'start_date' in attrs and attrs['start_date'] < timezone.localdate():
+            raise serializers.ValidationError('開始日には本日以降の日付を指定してください。')
+
+        start = field('start_date')
+        end = field('end_date')
+        if start is not None and end is not None and end < start:
+            raise serializers.ValidationError('終了日は開始日以降の日付を指定してください。')
+
+        if field('is_cancelled'):
             return attrs
 
         space = field('space')
-        start = field('start_date')
-        end = field('end_date')
 
-        others = Reservation.objects.filter(space=space).exclude(status=Reservation.Status.CANCELLED)
+        others = Reservation.objects.filter(space=space, is_cancelled=False)
         if self.instance:
             others = others.exclude(pk=self.instance.pk)
 
@@ -87,11 +95,16 @@ class AnnouncementSerializer(serializers.ModelSerializer):
                 return attrs[name]
             return getattr(self.instance, name, None)
 
+        banner_start = field('banner_start_date')
+        banner_end = field('banner_end_date')
+        if banner_start is not None and banner_end is not None and banner_end < banner_start:
+            raise serializers.ValidationError('バナー表示終了日は開始日以降の日付を指定してください。')
+
         if not field('banner_enabled'):
             return attrs
 
-        my_start = field('banner_start_date') or date.min
-        my_end = field('banner_end_date') or date.max
+        my_start = banner_start or date.min
+        my_end = banner_end or date.max
 
         others = Announcement.objects.filter(banner_enabled=True)
         if self.instance:

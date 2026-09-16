@@ -22,7 +22,8 @@ export interface ApiSpace {
   capacity: number;
   tags: string[];
   description: string;
-  status: 'available' | 'in_use' | 'reserved' | 'closed';
+  status: 'available' | 'reserved' | 'closed';
+  is_closed: boolean;
 }
 
 export interface ApiReservation {

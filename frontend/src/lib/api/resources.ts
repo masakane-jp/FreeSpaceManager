@@ -155,7 +155,7 @@ export async function createSpace(input: {
   capacity: number;
   tags: string[];
   description: string;
-  status: Space['status'];
+  isClosed: boolean;
 }): Promise<Space> {
   const raw = await api.post<ApiSpace>('/spaces/', {
     area: Number(input.areaId),
@@ -163,7 +163,7 @@ export async function createSpace(input: {
     capacity: input.capacity,
     tags: input.tags,
     description: input.description,
-    status: input.status,
+    is_closed: input.isClosed,
   });
   return toSpace(raw);
 }
@@ -176,7 +176,7 @@ export async function updateSpace(
     capacity: number;
     tags: string[];
     description: string;
-    status: Space['status'];
+    isClosed: boolean;
   },
 ): Promise<Space> {
   const raw = await api.patch<ApiSpace>(`/spaces/${id}/`, {
@@ -185,7 +185,7 @@ export async function updateSpace(
     capacity: input.capacity,
     tags: input.tags,
     description: input.description,
-    status: input.status,
+    is_closed: input.isClosed,
   });
   return toSpace(raw);
 }
@@ -214,26 +214,25 @@ export async function createReservation(input: {
     purpose: input.purpose,
     start_date: input.startDate,
     end_date: input.endDate,
-    status: 'upcoming',
   });
   return toReservation(raw);
 }
 
 export async function updateReservation(
   id: string,
-  input: Partial<{ purpose: string; startDate: string; endDate: string; status: Reservation['status'] }>,
+  input: Partial<{ purpose: string; startDate: string; endDate: string }>,
 ): Promise<Reservation> {
   const raw = await api.patch<ApiReservation>(`/reservations/${id}/`, {
     purpose: input.purpose,
     start_date: input.startDate,
     end_date: input.endDate,
-    status: input.status,
   });
   return toReservation(raw);
 }
 
 export async function cancelReservation(id: string): Promise<Reservation> {
-  return updateReservation(id, { status: 'cancelled' });
+  const raw = await api.patch<ApiReservation>(`/reservations/${id}/`, { is_cancelled: true });
+  return toReservation(raw);
 }
 
 export async function getReservationHistory(id: string): Promise<ReservationHistoryEntry[]> {

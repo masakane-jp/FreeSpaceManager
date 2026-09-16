@@ -30,7 +30,6 @@ class ReservationOwnershipTests(BaseAPITestCase):
             'purpose': 'テスト予約',
             'start_date': '2030-01-01',
             'end_date': '2030-01-02',
-            'status': 'upcoming',
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
@@ -42,7 +41,6 @@ class ReservationOwnershipTests(BaseAPITestCase):
             'purpose': 'なりすましテスト',
             'start_date': '2030-02-01',
             'end_date': '2030-02-02',
-            'status': 'upcoming',
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['user'], self.member.id)
@@ -55,7 +53,6 @@ class ReservationOwnershipTests(BaseAPITestCase):
             'purpose': '管理者代理登録',
             'start_date': '2030-03-01',
             'end_date': '2030-03-02',
-            'status': 'upcoming',
         })
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['user'], self.member.id)
@@ -63,20 +60,59 @@ class ReservationOwnershipTests(BaseAPITestCase):
     def test_member_cannot_update_others_reservation(self):
         reservation = Reservation.objects.create(
             space=self.space, user=self.other_member, purpose='他人の予約',
-            start_date='2030-04-01', end_date='2030-04-02', status='upcoming',
+            start_date='2030-04-01', end_date='2030-04-02',
         )
         self.client.force_authenticate(user=self.member)
-        response = self.client.patch(f'/api/reservations/{reservation.id}/', {'status': 'cancelled'})
+        response = self.client.patch(f'/api/reservations/{reservation.id}/', {'is_cancelled': True})
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_admin_can_update_others_reservation(self):
         reservation = Reservation.objects.create(
             space=self.space, user=self.member, purpose='本人の予約',
-            start_date='2030-05-01', end_date='2030-05-02', status='upcoming',
+            start_date='2030-05-01', end_date='2030-05-02',
         )
         self.client.force_authenticate(user=self.admin)
-        response = self.client.patch(f'/api/reservations/{reservation.id}/', {'status': 'cancelled'})
+        response = self.client.patch(f'/api/reservations/{reservation.id}/', {'is_cancelled': True})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_member_can_list_all_reservations_for_space_occupancy_display(self):
+        Reservation.objects.create(
+            space=self.space, user=self.other_member, purpose='他人の予約（一覧表示用）',
+            start_date='2030-06-01', end_date='2030-06-02',
+        )
+        self.client.force_authenticate(user=self.member)
+        response = self.client.get('/api/reservations/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(any(r['purpose'] == '他人の予約（一覧表示用）' for r in response.data))
+
+    def test_member_cannot_view_single_detail_of_others_reservation(self):
+        reservation = Reservation.objects.create(
+            space=self.space, user=self.other_member, purpose='他人の予約（詳細）',
+            start_date='2030-07-01', end_date='2030-07-02',
+        )
+        self.client.force_authenticate(user=self.member)
+        response = self.client.get(f'/api/reservations/{reservation.id}/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_member_cannot_view_history_of_others_reservation(self):
+        reservation = Reservation.objects.create(
+            space=self.space, user=self.other_member, purpose='他人の予約（履歴）',
+            start_date='2030-07-05', end_date='2030-07-06',
+        )
+        self.client.force_authenticate(user=self.member)
+        response = self.client.get(f'/api/reservations/{reservation.id}/history/')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_member_can_view_own_reservation_detail_and_history(self):
+        reservation = Reservation.objects.create(
+            space=self.space, user=self.member, purpose='自分の予約',
+            start_date='2030-07-10', end_date='2030-07-11',
+        )
+        self.client.force_authenticate(user=self.member)
+        detail_response = self.client.get(f'/api/reservations/{reservation.id}/')
+        self.assertEqual(detail_response.status_code, status.HTTP_200_OK)
+        history_response = self.client.get(f'/api/reservations/{reservation.id}/history/')
+        self.assertEqual(history_response.status_code, status.HTTP_200_OK)
 
 
 class SuperuserVisibilityTests(BaseAPITestCase):
